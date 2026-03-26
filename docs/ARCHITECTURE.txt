@@ -1,0 +1,42 @@
+SharpLook — MVP архитектура (бэкенд FastAPI + Postgres/pgvector)
+
+Технологии:
+- FastAPI, SQLAlchemy, Alembic, Celery, Redis
+- Postgres + pgvector для векторного поиска
+- OpenAI embeddings (text-embedding-3-large)
+- S3-совместимое хранилище для изображений/ассетов
+
+Структура папок:
+- backend/
+  - app/main.py — точка входа FastAPI
+  - app/config.py — настройки (.env)
+  - app/db.py — подключение к Postgres
+  - app/models/ (product.py, brand.py, user.py, event.py, favorite.py, embedding.py)
+  - app/schemas/ — Pydantic-схемы
+  - app/api/v1/ (products.py, search.py, events.py, favorites.py, recommendations.py)
+  - app/services/ (embeddings.py, vector_store.py, catalog.py, recommendation.py)
+  - app/workers/ — Celery задачи
+  - alembic/ + alembic.ini — миграции
+  - requirements.txt, .env.example
+- data/seed/products.json — тестовые товары
+- scripts/ingest_vectors.py — расчёт и загрузка эмбеддингов
+- docs/api.http — примеры запросов
+- docker/compose.yaml — Postgres+pgvector, Redis, backend
+
+Ключевые таблицы:
+- products, embeddings, users, events, favorites
+- будущие: fit_assets (для виртуальной примерки), style_profiles (для AI-стилиста)
+
+Основные API v1:
+- GET /health
+- GET /products, GET /products/{id}
+- POST /search/text
+- POST /events
+- POST /favorites, DELETE /favorites/{product_id}, GET /favorites
+- GET /recommendations
+- (будущее) POST /tryon, POST /stylist
+
+Как готовиться к росту:
+- Логировать запросы, клики, избранное в events
+- Хранить ссылки на ассеты в S3, версии (оригинал/маска/3D) в fit_assets
+- Профили пользователей в style_profiles для будущих рекомендаций
