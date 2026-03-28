@@ -18,14 +18,20 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
+  const url = `${BASE_URL}${path}`;
+  try {
+    const res = await fetch(url, { ...options, headers, mode: "cors" });
 
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.detail || `API error ${res.status}`);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.detail || `API error ${res.status}`);
+    }
+
+    return res.json();
+  } catch (err) {
+    console.error("API request failed", { url, err });
+    throw err;
   }
-
-  return res.json();
 }
 
 /* --- Types --- */
