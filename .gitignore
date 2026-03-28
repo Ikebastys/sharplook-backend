@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual envs
+backend/.venv/
+venv/
+
+# DB / local data
+backend/sharplook.db
+data/
+
+# Editors
+.vscode/
