@@ -11,7 +11,13 @@ from app.api import admin
 def get_allowed_origins() -> List[str]:
     env_val = os.getenv("ALLOWED_ORIGINS")
     if not env_val:
-        return ["*"]
+        # Явно перечисляем dev-оригины, чтобы не было * с credentials
+        return [
+            "http://localhost:8080",
+            "http://127.0.0.1:8080",
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+        ]
     return [origin.strip() for origin in env_val.split(",") if origin.strip()]
 
 
