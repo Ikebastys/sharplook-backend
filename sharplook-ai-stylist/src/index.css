@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Manrope', system-ui, sans-serif;
+
+    /* Fashion base palette */
+    --background: 30 20% 95%;          /* #F5F2EE warm beige */
+    --foreground: 270 5% 15%;          /* #262429 dark graphite */
+
+    --card: 30 15% 92%;               /* #E7E1DA subtle sections */
+    --card-foreground: 270 5% 15%;
+
+    --popover: 30 20% 95%;
+    --popover-foreground: 270 5% 15%;
+
+    --primary: 225 68% 39%;           /* #1F43A8 SharpLook blue */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 15% 92%;          /* subtle beige */
+    --secondary-foreground: 270 5% 15%;
+
+    --muted: 30 10% 88%;
+    --muted-foreground: 25 5% 52%;    /* #8A8580 secondary text */
+
+    --accent: 340 30% 75%;            /* #D9A8B8 powder pink */
+    --accent-foreground: 270 5% 15%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 12% 85%;
+    --input: 30 12% 85%;
+    --ring: 225 68% 39%;
+
+    --radius: 0.625rem;
+
+    /* Extended palette */
+    --caramel: 30 47% 61%;            /* #CC9C6A */
+    --powder: 340 30% 75%;            /* #D9A8B8 */
+    --mint: 180 42% 50%;              /* #48B9BB */
+
+    /* Gradient */
+    --gradient-start: 335 89% 61%;    /* #F1479C */
+    --gradient-end: 262 60% 53%;      /* #7C35D6 */
+
+    /* Sidebar */
+    --sidebar-background: 30 20% 95%;
+    --sidebar-foreground: 270 5% 15%;
+    --sidebar-primary: 225 68% 39%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 15% 92%;
+    --sidebar-accent-foreground: 270 5% 15%;
+    --sidebar-border: 30 12% 85%;
+    --sidebar-ring: 225 68% 39%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+  }
+}
+
+@layer utilities {
+  .gradient-cta {
+    background: linear-gradient(135deg, hsl(335 89% 61%), hsl(262 60% 53%));
+  }
+  .gradient-cta:hover {
+    background: linear-gradient(135deg, hsl(335 89% 56%), hsl(262 60% 48%));
+  }
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(335 89% 61%), hsl(262 60% 53%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
