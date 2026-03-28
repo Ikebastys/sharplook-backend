@@ -6,6 +6,7 @@ __pycache__/
 # Virtual envs
 backend/.venv/
 venv/
+node_modules/
 
 # DB / local data
 backend/sharplook.db
