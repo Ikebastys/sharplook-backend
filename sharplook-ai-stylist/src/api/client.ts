@@ -1,7 +1,7 @@
-const BASE_URL = "http://localhost:8000";
+const BASE_URLS = ["http://localhost:8000", "http://127.0.0.1:8000"];
 
 export function getBaseUrl() {
-  return BASE_URL;
+  return BASE_URLS[0];
 }
 
 function getToken(): string | null {
@@ -18,20 +18,24 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const url = `${BASE_URL}${path}`;
-  try {
-    const res = await fetch(url, { ...options, headers, mode: "cors" });
-
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      throw new Error(body.detail || `API error ${res.status}`);
+  let lastErr: unknown;
+  for (const base of BASE_URLS) {
+    const url = `${base}${path}`;
+    try {
+      const res = await fetch(url, { ...options, headers, mode: "cors" });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.detail || `API error ${res.status}`);
+      }
+      return res.json();
+    } catch (err) {
+      console.error("API request failed", { url, err });
+      lastErr = err;
+      // пробуем следующий base-url на случай проблем с IPv6/localhost
+      continue;
     }
-
-    return res.json();
-  } catch (err) {
-    console.error("API request failed", { url, err });
-    throw err;
   }
+  throw lastErr || new Error("API request failed");
 }
 
 /* --- Types --- */
