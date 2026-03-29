@@ -11,13 +11,7 @@ from app.api import admin
 def get_allowed_origins() -> List[str]:
     env_val = os.getenv("ALLOWED_ORIGINS")
     if not env_val:
-        # Явно перечисляем dev-оригины, чтобы не было * с credentials
-        return [
-            "http://localhost:8080",
-            "http://127.0.0.1:8080",
-            "http://localhost:5173",
-            "http://127.0.0.1:5173",
-        ]
+        return ["*"]
     return [origin.strip() for origin in env_val.split(",") if origin.strip()]
 
 
@@ -26,7 +20,8 @@ app = FastAPI(title="SharpLook API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=get_allowed_origins(),
-    allow_credentials=True,
+    # креды не нужны, используем Authorization header; ставим False, чтобы не блокировать Origin=*
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
