@@ -145,7 +145,7 @@ const SearchResults = () => {
               <OutfitCard
                 key={r.id}
                 id={r.id}
-                image={r.image_path}
+                image={r.image_path || r.image_url || "/placeholder.svg"}
                 title={r.title}
                 description={r.description}
                 price={r.price}

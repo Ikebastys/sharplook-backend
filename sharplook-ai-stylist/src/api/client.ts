@@ -44,6 +44,7 @@ export interface Product {
   id: number;
   title: string;
   description: string;
+  image_url: string | null;
   image_path: string;
   price: number;
   category: string;
@@ -118,6 +119,7 @@ export function getMe() {
 }
 
 export function getImageUrl(imagePath: string) {
+  if (!imagePath) return "/placeholder.svg";
   if (imagePath.startsWith("http")) return imagePath;
   return `${BASE_URLS[0]}/${imagePath}`;
 }
