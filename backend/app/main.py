@@ -3,6 +3,7 @@ from typing import List
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.api.v1 import auth, events, favorites, search, me
 from app.api import admin
@@ -25,6 +26,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Отдаём статические картинки, если они лежат в ./images
+app.mount("/images", StaticFiles(directory="images"), name="images")
 
 app.include_router(search.router, prefix="/v1")
 app.include_router(events.router, prefix="/v1")

@@ -121,6 +121,8 @@ export function getMe() {
 export function getImageUrl(imagePath: string) {
   if (!imagePath) return "/placeholder.svg";
   if (imagePath.startsWith("http")) return imagePath;
-  // относительные пути указывают на отсутствующие локальные файлы — показываем плейсхолдер
-  return "/placeholder.svg";
+
+  // Нормализуем: убираем ведущие слэши, добавляем базовый URL бэка
+  const normalized = imagePath.replace(/^\\/+/, "");
+  return `${BASE_URLS[0].replace(/\\/$/, "")}/${normalized}`;
 }
