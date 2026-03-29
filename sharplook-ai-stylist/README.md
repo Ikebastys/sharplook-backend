@@ -12,3 +12,25 @@
 ### Требования к бэкенду
 - Эндпоинт `GET /v1/me` должен отдавать `{ id, email, is_admin }` по текущему JWT.
 - Страница `/admin/stats` должна уметь принимать `?token=...` (или cookie) для авторизации.
+
+## MVP v1
+1. Запуск фронта (dev):
+   ```
+   cd sharplook-ai-stylist
+   npm install
+   npm run dev -- --host --port 8080
+   ```
+2. Бэкенд (должен идти параллельно):
+   ```
+   cd backend
+   .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+   ```
+3. Открыть в браузере:
+   - Фронт: http://localhost:8080
+   - Админка (вкладка Admin в навбаре, нужен токен админа): iframe на http://localhost:8000/admin/stats
+   - Картинки подставляются из бэка: пример http://localhost:8000/images/1163.jpg
+4. Должно работать:
+   - Текстовый поиск по товарам с учётом цвета
+   - Отображение реальных фото из `backend/images` по полю `image_path`
+   - Логин/регистрация, определение админа через /v1/me, избранное
+   - Админ-статистика внутри страницы /admin

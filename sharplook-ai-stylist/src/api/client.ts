@@ -123,6 +123,6 @@ export function getImageUrl(imagePath: string) {
   if (imagePath.startsWith("http")) return imagePath;
 
   // Нормализуем: убираем ведущие слэши, добавляем базовый URL бэка
-  const normalized = imagePath.replace(/^\\/+/, "");
-  return `${BASE_URLS[0].replace(/\\/$/, "")}/${normalized}`;
+  const normalized = imagePath.replace(/^\/+/, "");
+  return `${BASE_URLS[0].replace(/\/$/, "")}/${normalized}`;
 }
