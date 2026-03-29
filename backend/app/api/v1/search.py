@@ -54,7 +54,9 @@ def search_text(
     log_search_event(db, query_text, user_id)
     db.commit()
 
-    products: List[Product] = semantic_search(db, query_text, limit=payload.limit)
+    # Берём чуть больше результатов, чтобы после приоритезации цвета не потерять релевантные
+    raw_limit = min(payload.limit * 5, 200)
+    products: List[Product] = semantic_search(db, query_text, limit=raw_limit)
 
     desired_color = detect_color(query_text)
     if desired_color:
@@ -72,9 +74,13 @@ def search_text(
                 text("SELECT product_id FROM favorites WHERE user_id = :uid"), {"uid": current_user.id}
             )
         }
+        # После сортировки по цвету, оставляем только нужное количество
+        products = products[: payload.limit]
         for p in products:
             p.is_favorite = p.id in fav_ids
 
+    # Если не было current_user, всё равно урезаем до лимита
+    products = products[: payload.limit]
     return {"items": products}
 
 
