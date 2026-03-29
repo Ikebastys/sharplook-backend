@@ -4,7 +4,7 @@ from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import auth, events, favorites, search
+from app.api.v1 import auth, events, favorites, search, me
 from app.api import admin
 
 
@@ -35,6 +35,7 @@ app.include_router(search.router, prefix="/v1")
 app.include_router(events.router, prefix="/v1")
 app.include_router(favorites.router, prefix="/v1")
 app.include_router(auth.router)
+app.include_router(me.router)
 app.include_router(admin.router)
 
 

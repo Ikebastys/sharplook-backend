@@ -31,7 +31,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     } catch (err) {
       console.error("API request failed", { url, err });
       lastErr = err;
-      // пробуем следующий base-url на случай проблем с IPv6/localhost
+      // пробуем следующий base-url (например, если localhost резолвится в IPv6)
       continue;
     }
   }
@@ -54,6 +54,12 @@ export interface Product {
 export interface AuthResponse {
   access_token: string;
   token_type: string;
+}
+
+export interface UserProfile {
+  id: number;
+  email: string;
+  is_admin: boolean;
 }
 
 export interface ToggleFavoriteResponse {
@@ -107,7 +113,11 @@ export function logClick(productId: number) {
   }).catch(() => {});
 }
 
+export function getMe() {
+  return request<UserProfile>("/v1/me");
+}
+
 export function getImageUrl(imagePath: string) {
   if (imagePath.startsWith("http")) return imagePath;
-  return `${BASE_URL}/${imagePath}`;
+  return `${BASE_URLS[0]}/${imagePath}`;
 }
