@@ -11,6 +11,31 @@ from app.schemas.search import SearchResponse, SearchTextRequest
 from app.semantic_search import semantic_search
 from app.services.events import log_search_event
 
+
+COLOR_KEYWORDS = {
+    "red": ["red", "красн", "малин", "бордо", "алый"],
+    "blue": ["blue", "син", "голуб"],
+    "green": ["green", "зел"],
+    "black": ["black", "черн"],
+    "white": ["white", "бел"],
+    "yellow": ["yellow", "желт"],
+    "pink": ["pink", "розов"],
+    "beige": ["beige", "беж"],
+    "brown": ["brown", "коричн"],
+    "grey": ["grey", "gray", "сер"],
+    "purple": ["purple", "фиолет", "пурпур"],
+    "orange": ["orange", "оранж"],
+}
+
+
+def detect_color(query: str) -> str | None:
+    q = query.lower()
+    for color, subs in COLOR_KEYWORDS.items():
+        for s in subs:
+            if s in q:
+                return color
+    return None
+
 router = APIRouter(prefix="/search", tags=["search"])
 
 
@@ -30,6 +55,15 @@ def search_text(
     db.commit()
 
     products: List[Product] = semantic_search(db, query_text, limit=payload.limit)
+
+    desired_color = detect_color(query_text)
+    if desired_color:
+        def color_matches(p: Product) -> bool:
+            c = (p.color or "").lower()
+            return desired_color in c
+
+        # сортируем так, чтобы совпадающий цвет шёл раньше, сохраняя общий порядок
+        products.sort(key=lambda p: (not color_matches(p)))
 
     if current_user:
         fav_ids = {
