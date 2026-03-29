@@ -54,7 +54,7 @@ def search_text(
     log_search_event(db, query_text, user_id)
     db.commit()
 
-    # Берём чуть больше результатов, чтобы после приоритезации цвета не потерять релевантные
+    # Берём чуть больше результатов, чтобы после фильтрации по цвету не потерять релевантные
     raw_limit = min(payload.limit * 5, 200)
     products: List[Product] = semantic_search(db, query_text, limit=raw_limit)
 
@@ -64,8 +64,9 @@ def search_text(
             c = (p.color or "").lower()
             return desired_color in c
 
-        # сортируем так, чтобы совпадающий цвет шёл раньше, сохраняя общий порядок
-        products.sort(key=lambda p: (not color_matches(p)))
+        # Оставляем только товары с совпадающим цветом (если их мало — покажем столько, сколько есть)
+        filtered = [p for p in products if color_matches(p)]
+        products = filtered
 
     if current_user:
         fav_ids = {
