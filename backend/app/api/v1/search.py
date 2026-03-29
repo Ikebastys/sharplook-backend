@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, File, UploadFile
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from app.db import get_db
@@ -34,8 +35,8 @@ def search_text(
         fav_ids = {
             row[0]
             for row in db.execute(
-                "SELECT product_id FROM favorites WHERE user_id = :uid", {"uid": current_user.id}
-            ).fetchall()
+                text("SELECT product_id FROM favorites WHERE user_id = :uid"), {"uid": current_user.id}
+            )
         }
         for p in products:
             p.is_favorite = p.id in fav_ids
